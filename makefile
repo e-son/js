@@ -11,5 +11,11 @@ build/eson-min.js: build/eson.js
 compile: build/eson.js
 
 
+test/%.js: test/%.coffee
+	coffee --output test --compile $<
+
+tests: build/eson.js test/*.js
+	mocha -R nyan
+
 clean:
 	rm -r build
