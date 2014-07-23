@@ -7,9 +7,12 @@ all: build/eson-min.js
 # Just compile coffee script
 coffee: build/eson.js
 
-# Compile all testfiles and run the tests
+# Compile all testfiles
 testfiles=$(patsubst %.coffee,%.js, $(wildcard test/*.coffee))
 tests: build/eson.js $(testfiles)
+
+# Run tests in Node
+test-run: tests
 	mocha -R nyan
 
 # Removes gitignores
