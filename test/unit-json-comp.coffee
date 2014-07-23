@@ -1,6 +1,6 @@
 assert = require 'assert'
 ESON = require '../build/eson.js'
-JSON_TEST_OBJECTS = require './JSON-test-objects'
+JSON_TEST_OBJECTS = require './helper-JSONs'
 
 
 describe 'Parsing JSON Objects', ()->
