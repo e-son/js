@@ -4,29 +4,32 @@ ESON = require '../build/eson'
 
 describe 'parse', ()->
 
+  before ()->
+    ESON.registerTag 'tag', ()->
+
   it 'should not parse two values', ()->
     assert.throws ()->
       ESON.parse '{"name":"twin1"} {"name":"twin1"}'
 
   it 'should not parse empty tag', ()->
     assert.throws ()->
-      ESON.parse '   #nothing    '
+      ESON.parse '   #tag    '
 
   it 'should not parse empty tag (multiplied)', ()->
     assert.throws ()->
-      ESON.parse '#nothing #really'
+      ESON.parse '#tag #tag'
 
   it 'should not parse empty tag (in list)', ()->
     assert.throws ()->
-      ESON.parse '[5, #tag "tagged", #nothing , {}]'
+      ESON.parse '[5, #tag "tagged", #tag , {}]'
 
   it 'should not parse empty tag (before close bracket)', ()->
     assert.throws ()->
-      ESON.parse '{"some":"thing", "no":#thing }'
+      ESON.parse '{"some":"thing", "no":#tag }'
 
   it 'should not parse tagged key', ()->
     assert.throws ()->
-      ESON.parse '{"some":"thing", #pre "tagged":"thing"}'
+      ESON.parse '{"some":"thing", #tag "tagged":"thing"}'
 
   it 'should not parse unclosed string', ()->
     assert.throws ()->
