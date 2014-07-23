@@ -3,21 +3,21 @@ ESON = require '../build/eson.js'
 JSON_TEST_OBJECTS = require './helper-JSONs'
 
 
-describe 'Parsing JSON Objects', ()->
+describe 'parse', ()->
 
   for f in JSON_TEST_OBJECTS.all
     x = f()
 
-    it 'should parse '+x.name, ()->
+    it 'should be consistent with JSON.parse on JSON named '+x.name, ()->
       s = JSON.stringify(x.val)
-      assert.deepEqual(ESON.parse(s),x.val)
+      assert.deepEqual(ESON.parse(s),JSON.parse(s))
 
 
-describe 'Stringify JSON Objects', ()->
+describe 'stringify', ()->
 
   for f in JSON_TEST_OBJECTS.all
     x = f()
 
-    it 'should stringify '+x.name, ()->
+    it 'should be consistent with JSON.stringify on JSON named '+x.name, ()->
       s = JSON.stringify(x.val)
       assert.equal(ESON.stringify(x.val),s)
