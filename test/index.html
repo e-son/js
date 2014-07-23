@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ESON browser test</title>
+    <link rel="stylesheet" href="helper-browser/mocha.css" />
+</head>
+<body>
+    <div id="mocha"></div>
+    <script src="helper-browser/assert.js"></script>
+    <script src="helper-browser/mocha.js"></script>
+    <script src="helper-JSONs.js"></script>
+    <script src="../build/eson.js"></script>
+    <script>
+        mocha.setup('bdd')
+    </script>
+    <script>
+        // Ugly hack to support require
+        function require(sth){
+            if (sth === 'assert') return assert;
+            if (sth === './helper-JSONs') return JSON_TEST_OBJECTS;
+            if (sth === '../build/eson') return ESON;
+            return undefined;
+        }
+    </script>
+    <script src="unit-registry.js"></script>
+    <script src="unit-junkproof.js"></script>
+    <script src="unit-json-comp.js"></script>
+    <script>
+        mocha.checkLeaks();
+        mocha.run();
+    </script>
+</body>
+</html>
