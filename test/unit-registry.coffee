@@ -1,5 +1,5 @@
 assert = require 'assert'
-ESON = require '../build/eson.js'
+ESON = require '../build/eson'
 
 
 describe 'Registry', ()->
