@@ -4,9 +4,20 @@
 
 
 # Strategy for tag parsing.
-# Parse tags calling registered function.
+# Parse tag calling reviver.
 standard_tag_resolver = (path, value)->
-  ESON.resolveTag(path)(value)
+  r = ESON.resolveTag(path)
+  if r is undefined
+    throw new Error "Tag '#{path}' was not registered"
+  r(value)
+
+
+# Factory for strategies for tag parsing.
+# Parse tag calling reviver. Default reviver for non-existing tags is given.
+default_tag_resolver_factory = (default_reviver) ->
+  return (path, value)->
+    r = ESON.resolveTag(path) or default_reviver
+    return r(value)
 
 
 # Strategy for tag parsing.
@@ -199,9 +210,12 @@ ESON.Parser = Parser
 
 
 # Create and expose standard parsing function
-# Handles tag by calling registered functions
-ESON.parse = (str) ->
+# Handles tag by calling tag reviver
+# Optionally, default tag reviver can be provided
+ESON.parse = (str, default_reviver) ->
   p = new Parser str
+  unless default_reviver is undefined
+    p.tag_resolver = default_tag_resolver_factory(default_reviver)
   p.parse()
 
 

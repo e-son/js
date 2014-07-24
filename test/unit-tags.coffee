@@ -30,6 +30,14 @@ describe 'parse', ()->
     obj = ESON.parse '{"a":#tag1 1, "b":2, "c":#tag2 3}'
     assert.deepEqual obj, {a: (f1 1), b: 2, c: (f2 3)}
 
+  it 'should throw error on non-existing tag', ()->
+    assert.throws ()->
+      ESON.parse '#lag1 {}'
+
+  it 'should use default reviver when provided', ()->
+    obj = ESON.parse '#lag1 {}', f2
+    assert.deepEqual obj, f2 {}
+
 
 
 describe 'pure_parse', ()->
