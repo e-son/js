@@ -35,7 +35,17 @@ describe 'Registry', ()->
     it 'should not create namespace', ()->
       f = (x) -> x
       ESON.registerTag('ns1',{})
-      assert.throws (()->ESON.registerTag('ns1/ns2/ns3',{}))
+      assert.throws () ->
+        ESON.registerTag('ns1/ns2/ns3',{})
+
+    it 'should not rewrite namespace', ()->
+      f = (x) -> x
+      ESON.registerTag('ns1',{})
+      ESON.registerTag('ns1/ns2',{})
+      assert.throws () ->
+        ESON.registerTag('ns1',{})
+      assert.throws () ->
+        ESON.registerTag('ns1/ns2',(x)->x)
 
 
   describe '#resolveTag', ()->
@@ -60,7 +70,24 @@ describe 'Registry', ()->
       ESON.tags.ns1 = {}
       assert.equal(ESON.resolveTag('ns1/ns2'), undefined)
 
-    it 'should fail when parent is not defined', ()->
+    it 'should return undefined when parent is not defined', ()->
       f = (x) -> x
       ESON.tags.ns1 = {}
-      assert.throws (() -> ESON.resolveTag('ns1/ns2/ns3'))
+      assert.equal(ESON.resolveTag('ns1/ns2'), undefined)
+
+  describe '#deleteTag', ()->
+
+    it 'should delete existing tag', ()->
+      ESON.tags.tg = (x) -> x
+      ESON.deleteTag('tg')
+      assert.deepEqual(ESON.tags, {})
+
+    it 'should delete whole tree', ()->
+      ESON.tags = {ns1 : {ns2: {ns3: {tg: (x)->x }}}}
+      ESON.deleteTag('ns1/ns2')
+      assert.deepEqual(ESON.tags.ns1, {})
+
+    it 'should accept non-existing path', ()->
+      ESON.tags = {ns1 : {ns2: {ns3: {tg: (x)->x }}}}
+      ESON.deleteTag('ns1/ns2/ns3/ns4/tg')
+
