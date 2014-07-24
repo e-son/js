@@ -3,6 +3,24 @@
 # =======
 
 
+# Strategy for tag parsing.
+# Parse tags calling registered function.
+standard_tag_resolver = (path, value)->
+  ESON.resolveTag(path)(value)
+
+
+# Strategy for tag parsing.
+# Ignore them
+ignore_tag_resolver = (path, value)->
+  value
+
+
+# Strategy for tag parsing.
+# Pack them to stringify compatible Tag structure
+composite_tag_resolver = (path, value)->
+  new Tag path, value
+
+
 # Class which stores data during parsing
 # Relieves argument passing
 class Parser
@@ -11,6 +29,7 @@ class Parser
   constructor: (str)->
     @list = []  # Will contain tokens
     @pos = 0    # Actual position in @list
+    @tag_resolver = standard_tag_resolver
     @tokenize(str)
 
 
@@ -85,7 +104,7 @@ class Parser
     else if v[0] == '#'
       tag = v.slice(1)  # get tagged string
       val = @parseVal()  # again, value follows
-      return ESON.resolveTag(tag)(val)
+      return @tag_resolver(tag, val)
 
     # Is it null?
     else if v[0] == 'n'
@@ -178,5 +197,23 @@ class Parser
 # Expose Parser to the world
 ESON.Parser = Parser
 
-# Create and expose parsing function
-ESON.parse = (str) -> (new Parser str).parse()
+
+# Create and expose standard parsing function
+# Handles tag by calling registered functions
+ESON.parse = (str) ->
+  p = new Parser str
+  p.parse()
+
+
+# Create and expose parsing function which ignores tags
+ESON.pure_parse = (str) ->
+  p = new Parser str
+  p.tag_resolver = ignore_tag_resolver
+  p.parse()
+
+
+# Create and expose parsing function which creates Tag structures
+ESON.struct_parse = (str) ->
+  p = new Parser str
+  p.tag_resolver = composite_tag_resolver
+  p.parse()

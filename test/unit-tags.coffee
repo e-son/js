@@ -32,6 +32,53 @@ describe 'parse', ()->
 
 
 
+describe 'pure_parse', ()->
+
+  it 'should ignore tag', ()->
+    obj = ESON.pure_parse '#tag1 {}'
+    assert.deepEqual obj, {}
+
+  it 'should ignore recursive tags', ()->
+    obj = ESON.pure_parse '#tag1 #tag2 {}'
+    assert.deepEqual obj, {}
+
+  it 'should ignore tag inside the list', ()->
+    obj = ESON.pure_parse '[#tag1 1, 2, #tag2 3]'
+    assert.deepEqual obj, [1, 2, 3]
+
+  it 'should ignore tag inside the object', ()->
+    obj = ESON.pure_parse '{"a":#tag1 1, "b":2, "c":#tag2 3}'
+    assert.deepEqual obj, {a: 1, b: 2, c: 3}
+
+
+
+describe 'struct_parse', ()->
+
+  f1 = (x)->
+    return (new ESON.Tag 'tag1', x)
+
+  f2 = (x)->
+    return (new ESON.Tag 'tag2', x)
+
+  it 'should handle tag', ()->
+    obj = ESON.struct_parse '#tag1 {}'
+    assert(obj instanceof ESON.Tag)
+    assert.deepEqual obj, f1 {}
+
+  it 'should handle recursive tags', ()->
+    obj = ESON.struct_parse '#tag1 #tag2 {}'
+    assert.deepEqual obj, f1 f2 {}
+
+  it 'should handle tag inside the list', ()->
+    obj = ESON.struct_parse '[#tag1 1, 2, #tag2 3]'
+    assert.deepEqual obj, [(f1 1), 2, (f2 3)]
+
+  it 'should handle tag inside the object', ()->
+    obj = ESON.struct_parse '{"a":#tag1 1, "b":2, "c":#tag2 3}'
+    assert.deepEqual obj, {a: (f1 1), b: 2, c: (f2 3)}
+
+
+
 describe 'stringify', ()->
 
   tokens = (s)-> s.split(/[\[\]{}:,\s ]+/)
