@@ -8,11 +8,14 @@ class Checker
     @row.insertCell(-1).innerHTML = obj.name
     @obj = obj
     @s = ESON.stringify(obj)
-    t1 = + new Date()
 
+    t1 = + new Date()
     while t1 + 50 > (+ new Date())
       JSON.parse(@s)
       @np++
+    t1 = + new Date()
+    for i in [1..@np]
+      JSON.parse(@s)
     t2 = + new Date()
     @tp = t2-t1
 
@@ -20,6 +23,9 @@ class Checker
     while t1 + 50 > (+ new Date())
       JSON.stringify(@obj)
       @ns++
+    t1 = + new Date()
+    for i in [1..@ns]
+      JSON.stringify(@obj)
     t2 = + new Date()
     @ts = t2-t1
 
