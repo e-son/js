@@ -3,12 +3,6 @@
 # ========
 
 
-# Tags tree root
-# Tree is built by objects in nodes and functions in leafs
-# Tree paths use slash seperator
-ESON.tags = {}
-
-
 # Get tree element by it's path
 ESON.resolveTag = (path)->
   tokens = path.split '/'
