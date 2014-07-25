@@ -21,9 +21,10 @@ _stringify = (value,prefix)->
     else if typeof value.toJSON is 'function'
       _stringify value.toJSON(), prefix
 
-    # Tags have a special handler
-    else if value instanceof Tag
-      value._tagToESON prefix
+    # Object can define internal method to stringify
+    # Used with Tag
+    else if typeof value._toESON is 'function'
+      value._toESON prefix
 
     # Array
     else if value instanceof Array
@@ -32,7 +33,7 @@ _stringify = (value,prefix)->
       for x in value
         prefix.push ',' if comma
         # In arrays, undefined values are printed like null's
-        # This corresponds to JSON's behaviour
+        # This corresponds to JSON's behavior
         unless x is undefined
           _stringify x, prefix
         else

@@ -13,7 +13,7 @@ class Tag
     @data = data
 
   # Pushes splitted Tag's representation to array for future concatenation
-  _tagToESON: (prefix)->
+  _toESON: (prefix)->
     prefix.push '#'
     prefix.push @tag
     prefix.push ' '
