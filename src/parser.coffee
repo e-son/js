@@ -4,7 +4,7 @@
 
 
 # Strategy for tag parsing.
-# Parse tag calling reviver.
+# Parse tag calling handler.
 standard_tag_resolver = (path, value)->
   r = ESON.resolveTag(path)
   if r is undefined
@@ -13,10 +13,10 @@ standard_tag_resolver = (path, value)->
 
 
 # Factory for strategies for tag parsing.
-# Parse tag calling reviver. Default reviver for non-existing tags is given.
-default_tag_resolver_factory = (default_reviver) ->
+# Parse tag calling handler. Default handler for non-existing tags is given.
+default_tag_resolver_factory = (default_handler) ->
   return (path, value)->
-    r = ESON.resolveTag(path) or default_reviver
+    r = ESON.resolveTag(path) or default_handler
     return r(value)
 
 
@@ -210,12 +210,12 @@ ESON.Parser = Parser
 
 
 # Create and expose standard parsing function
-# Handles tag by calling tag reviver
-# Optionally, default tag reviver can be provided
-ESON.parse = (str, default_reviver) ->
+# Uses registered tag handlers for parsing.
+# Optionally, default tag handler can be provided
+ESON.parse = (str, default_handler) ->
   p = new Parser str
-  unless default_reviver is undefined
-    p.tag_resolver = default_tag_resolver_factory(default_reviver)
+  unless default_handler is undefined
+    p.tag_resolver = default_tag_resolver_factory(default_handler)
   p.parse()
 
 

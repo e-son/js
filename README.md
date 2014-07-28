@@ -10,17 +10,17 @@ Documentation
 Before reading this you should read
 [ESON documentation](https://github.com/e-son/ESON/) .
 
-### ESON.parse( str , \[default_reviver\] )
+### ESON.parse( str , \[default_handler\] )
 
-Parses `str` using registered tag revivers.
-Uses `default_reviver` for unregistered tags or throws error
-if `default_reviver` is not provided.
+Parses `str` using registered tag handlers.
+Uses `default_handler` for unregistered tags or throws error
+if `default_handler` is not provided.
 
 ### ESON.pure_parse( str )
 
 Parses `str` ignoring all tags.
 
-### ESON.struct_parse( str , \[default_reviver\] )
+### ESON.struct_parse( str )
 
 Parses `str` encapsulating tags into `ESON.Tag` object (see below).
 
@@ -40,8 +40,8 @@ functions, calls them and converts result.
 
 ### ESON.registerTag( path , obj )
 
-Registers reviver or namespace to the specified `path`. Reviver should be
-a function accepting one argument, namespace is an object of subrevivers and
+Registers handler or namespace to the specified `path`. Handler should be
+a function accepting one argument, namespace is an object of subhandlers and
 subnamespaces. Parent namespace of `path` has to be already registered but
 `path` itself has to be free.
 

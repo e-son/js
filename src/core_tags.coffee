@@ -3,7 +3,7 @@
 # ==============
 
 
-# Set of built-in tag revivers
+# Set of built-in tag handlers
 ESON.tags.core =
 
   # Datetime should be ISO format, but it can be anything Date accepts

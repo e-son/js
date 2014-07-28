@@ -34,7 +34,7 @@ describe 'parse', ()->
     assert.throws ()->
       ESON.parse '#lag1 {}'
 
-  it 'should use default reviver when provided', ()->
+  it 'should use default handler when provided', ()->
     obj = ESON.parse '#lag1 {}', f2
     assert.deepEqual obj, f2 {}
 
