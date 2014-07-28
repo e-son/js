@@ -93,49 +93,55 @@ class Parser
     return res
 
 
+  # A tree deciding parsing behaviour based on first token character
+  parse_tree:
+
+    # Object
+    '{': (that, v)-> that.parseObj()
+
+    # List
+    '[': (that, v)-> that.parseList()
+
+    # String
+    '\"': (that, v)-> JSON.parse v
+
+    # Tag
+    '#': (that, v)->
+      tag = v.slice(1)  # get tagged string
+      val = that.parseVal()  # again, value follows
+      return that.tag_resolver(tag, val)
+
+    # Constants
+    'n': (that, v)-> null
+    't': (that, v)-> true
+    'f': (that, v)-> false
+
+    # Numbers
+    '-': (that, v)-> JSON.parse v
+    '0': (that, v)-> JSON.parse v
+    '1': (that, v)-> JSON.parse v
+    '2': (that, v)-> JSON.parse v
+    '3': (that, v)-> JSON.parse v
+    '4': (that, v)-> JSON.parse v
+    '5': (that, v)-> JSON.parse v
+    '6': (that, v)-> JSON.parse v
+    '7': (that, v)-> JSON.parse v
+    '8': (that, v)-> JSON.parse v
+    '9': (that, v)-> JSON.parse v
+
+
   # Parses any ESON value
   parseVal: ()->
 
     # Get next token
     v = @list[@pos++]
 
-    # Is it an object?
-    if v == '{'
-      return @parseObj()
+    # Decide behaviour based on first char
+    f = @parse_tree[v[0]]
+    @error "Invalid token" if f is undefined
 
-    # Is it a list?
-    else if v == '['
-      return @parseList()
-
-    # Is it a string?
-    else if v[0] == '\"'
-      return JSON.parse v  # use JSON for strings
-
-    # Is it a tagged value?
-    else if v[0] == '#'
-      tag = v.slice(1)  # get tagged string
-      val = @parseVal()  # again, value follows
-      return @tag_resolver(tag, val)
-
-    # Is it null?
-    else if v[0] == 'n'
-      return null
-
-    # Is it true?
-    else if v[0] == 't'
-      return true
-
-    # Is it false?
-    else if v[0] == 'f'
-      return false
-
-    # Is it number?
-    else if /^[-0-9]$/.test(v[0])
-      return JSON.parse v  # use JSON for numbers also
-
-    # What the hell is it?
-    else
-      @error "Invalid token"
+    # Apply the behaviour
+    return f(this, v)
 
 
   # Parses opened list
