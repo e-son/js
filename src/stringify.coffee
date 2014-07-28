@@ -21,10 +21,12 @@ _stringify = (value,prefix)->
     else if typeof value.toJSON is 'function'
       _stringify value.toJSON(), prefix
 
-    # Object can define internal method to stringify
-    # Used with Tag
-    else if typeof value._toESON is 'function'
-      value._toESON prefix
+    # Tag
+    else if value instanceof Tag
+      prefix.push '#'
+      prefix.push value.tag
+      prefix.push ' '
+      _stringify value.data, prefix
 
     # Array
     else if value instanceof Array
