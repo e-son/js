@@ -16,7 +16,8 @@ standard_tag_resolver = (path, value)->
 # Parse tag calling handler. Default handler for non-existing tags is given.
 default_tag_resolver_factory = (default_handler) ->
   return (path, value)->
-    r = ESON.resolveTag(path) or default_handler
+    r = ESON.resolveTag(path)
+    return default_handler(path, value) unless r
     return r(value)
 
 

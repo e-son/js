@@ -10,6 +10,9 @@ describe 'parse', ()->
   f2 = (x)->
     return {tag:2, val:x}
 
+  dh = (tag, val)->
+    return {tag:tag, val:val}
+
   before ()->
     ESON.registerTag 'tag1', f1
     ESON.registerTag 'tag2', f2
@@ -35,9 +38,8 @@ describe 'parse', ()->
       ESON.parse '#lag1 {}'
 
   it 'should use default handler when provided', ()->
-    obj = ESON.parse '#lag1 {}', f2
-    assert.deepEqual obj, f2 {}
-
+    obj = ESON.parse '#lag1 {}', dh
+    assert.deepEqual obj, (dh 'lag1', {})
 
 
 describe 'pure_parse', ()->
