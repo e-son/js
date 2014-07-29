@@ -5,32 +5,32 @@
 
 # Strategy for tag parsing.
 # Parse tag calling handler.
-standard_tag_resolver = (path, value)->
-  r = ESON.resolveTag(path)
+standard_tag_resolver = (tag, data)->
+  r = ESON.resolveTag(tag)
   if r is undefined
-    throw new Error "Tag '#{path}' was not registered"
-  r(value)
+    throw new Error "Tag '#{tag}' was not registered"
+  r(data)
 
 
 # Factory for strategies for tag parsing.
 # Parse tag calling handler. Default handler for non-existing tags is given.
 default_tag_resolver_factory = (default_handler) ->
-  return (path, value)->
-    r = ESON.resolveTag(path)
-    return default_handler(path, value) unless r
-    return r(value)
+  return (tag, data)->
+    r = ESON.resolveTag(tag)
+    return default_handler(tag, data) unless r
+    return r(data)
 
 
 # Strategy for tag parsing.
 # Ignore them
-ignore_tag_resolver = (path, value)->
-  value
+ignore_tag_resolver = (tag, data)->
+  data
 
 
 # Strategy for tag parsing.
 # Pack them to stringify compatible Tag structure
-composite_tag_resolver = (path, value)->
-  new Tag path, value
+composite_tag_resolver = (tag, data)->
+  new Tag tag, data
 
 
 # Class which stores data during parsing
