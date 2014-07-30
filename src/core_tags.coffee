@@ -6,7 +6,7 @@
 # Set of built-in tag handlers
 ESON.tags.core =
 
-  # Datetime should be ISO format, but it can be anything Date accepts
+  # Datetime should be ISO format string, but it can be anything Date accepts
   datetime: (str)-> new Date(str)
 
 

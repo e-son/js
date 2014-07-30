@@ -3,9 +3,19 @@
 # =========
 
 
-# Internal stringify function, which pushes splitted value representation
-# to an array for later concatenation
-_stringify = (value,prefix)->
+# Stringify overview
+# ------------------
+#
+# ESON.stringify tries to match JSON.stringify behavior.
+# Object can define own .toESON() which is preferred to .toJSON() but
+# both can be used to define value to be stringified.
+#
+# Implementation of stringify concatenates strings only once - at the end.
+# During the object searching these strings are pushed to array named prefix.
+
+
+# Internal stringify function, pushes strings to array
+_stringify = (value, prefix)->
 
   # Only interesting type is 'object'
   if typeof value is 'object'
@@ -24,9 +34,9 @@ _stringify = (value,prefix)->
     # Tag
     else if value instanceof Tag
       prefix.push '#'
-      prefix.push value.tag
+      prefix.push value.id
       prefix.push ' '
-      _stringify value.data, prefix
+      _stringify (value.data or null), prefix
 
     # Array
     else if value instanceof Array

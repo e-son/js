@@ -3,11 +3,16 @@
 # =====
 
 
-# Tag
-# The only way to create an object which stringifies with tag.
-# Meant to be returned by object's toESON()
-Tag = (tag, data)->
-    @tag = tag
+# Tag class
+# ---------
+#
+# Tag class is an official representation of Tag structure from ESON format.
+# It has properties `id` (tag identifier) and `data` (tagged value).
+# It is the only structure stringified to ESON tag .
+# It can be parsed using ESON.struct_parse .
+
+Tag = (id, data)->
+    @id = id
     @data = data
     return this
 

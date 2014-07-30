@@ -2,6 +2,7 @@
 #  ESON
 # ======
 
+# This should be the first file to merge
 
 # Global ESON object
 ESON = {}
@@ -13,6 +14,6 @@ window.ESON = ESON unless typeof window is "undefined"
 module.exports = ESON unless typeof module is "undefined"
 
 # Tags tree root
-# Tree is built by objects in nodes and handlers in leafs
-# Tree paths use slash seperator
+# Look at tag tree documentation in registry.coffee
+# Defined here, because this is the first file of merge
 ESON.tags = {}
