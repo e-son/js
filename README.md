@@ -31,12 +31,12 @@ parsed tagged data and returns value that is result of tag parsing.
 ### Standard tag parsing strategy ###
 
 Standard parsing strategy tries to find handler registered with the tag
-identifier. When successful passes data to the handler and returns it result.
-When no handler is registered with the identifier, default strategy is used if
-provided or error is thrown. Standard parsing strategy is provided by
-`ESON.parse` function:
+identifier. When successful, passes data to the handler and returns its result.
+When no handler is registered with the identifier, default strategy is used
+or error is thrown. Standard parsing strategy is provided by `ESON.parse`
+function:
 
-#### ESON.parse(tag, [default_strategy]) ####
+#### ESON.parse( tag , [default_strategy] ) ####
 
 Parses `str` using registered tag handlers.
 Uses `default_handler` for unregistered tags or throws error
@@ -60,8 +60,8 @@ parsed data and returns value that is result of tag parsing.
 Tag tree is a structure where tag handlers are organized. It's a tree composed
 of namespaces which can contain other namespaces or handlers.
 Namespace is implemented by objects. Tree elements can be addressed
-by slash (`/`) separated paths. Paths are tag identifiers, handlers are bound
-to
+by slash (`/`) separated paths. Paths are tag identifiers handlers are bound
+to.
 
 #### ESON.registerTag( path , elem ) ####
 
@@ -127,6 +127,7 @@ Converts `obj` to valid ESON string. Tries to copy JSON.stringify behavior.
 Object can define own .toESON() which is preferred to .toJSON() but
 both can be used to define the value to be stringified.
 
+    >>> poo = {}
     >>> poo.name = 'Joe';
     >>> poo.toEson = function (){
     ...     return new ESON.Tag('poo', this.name);   
