@@ -66,7 +66,7 @@ The only object which can be stringified to tag.
 Internal object providing custom tag parsing:
 
     var p = new Parser(str);
-    p.tag_resolver = function (tag, data) {return applyTag(tag, data)};
+    p.tag_strategy = function (tag, data) {return applyTag(tag, data)};
     var obj = p.parse();
     
 ### ESON.tags

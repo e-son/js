@@ -3,34 +3,45 @@
 # =======
 
 
-# Strategy for tag parsing.
-# Parse tag calling handler.
-standard_tag_resolver = (tag, data)->
-  r = ESON.resolveTag(tag)
-  if r is undefined
-    throw new Error "Tag '#{tag}' was not registered"
-  r(data)
+# Tag parsing strategies
+# ----------------------
+#
+# Tag parsing strategy is a function, which takes tag identifier and
+# parsed data and returns object that is result of tag parsing.
+#
+# NOTE:
+# Tag parsing handler is a function similar to strategy but it does not take
+# identifier, since it should be bound to the identifier by outer mechanism.
+# (Normally, by tag tree)
 
 
-# Factory for strategies for tag parsing.
-# Parse tag calling handler. Default handler for non-existing tags is given.
-default_tag_resolver_factory = (default_handler) ->
-  return (tag, data)->
-    r = ESON.resolveTag(tag)
-    return default_handler(tag, data) unless r
-    return r(data)
-
-
-# Strategy for tag parsing.
-# Ignore them
-ignore_tag_resolver = (tag, data)->
+# Tag parsing strategy
+# Ignores tags.
+ignore_tag_strategy = (tag, data)->
   data
 
 
-# Strategy for tag parsing.
-# Pack them to stringify compatible Tag structure
-composite_tag_resolver = (tag, data)->
+# Tag parsing strategy
+# Parses tags to ESON.Tag objects.
+struct_tag_strategy = (tag, data)->
   new Tag tag, data
+
+
+# Tag parsing strategy
+# Raises error - used as default in make_standard_tag_strategy.
+error_tag_strategy = (tag, data)->
+  throw new Error "Tag '#{tag}' was not registered"
+
+
+# Strategy for tag parsing.
+# Tries to use registered handler and use given default_strategy otherwise
+make_standard_tag_strategy = (default_strategy) ->
+  default_strategy = default_strategy or error_tag_strategy
+  return (tag, data)->
+    r = ESON.resolveTag(tag)
+    unless typeof r is 'function'
+      return default_strategy(tag, data)
+    return r(data)
 
 
 # Class which stores data during parsing
@@ -41,7 +52,7 @@ class Parser
   constructor: (str)->
     @list = []  # Will contain tokens
     @pos = 0    # Actual position in @list
-    @tag_resolver = standard_tag_resolver
+    @tag_strategy = make_standard_tag_strategy()
     @tokenize(str)
 
 
@@ -116,7 +127,7 @@ class Parser
     else if v[0] == '#'
       tag = v.slice(1)  # get tagged string
       val = @parseVal()  # again, value follows
-      return @tag_resolver(tag, val)
+      return @tag_strategy(tag, val)
 
     # Is it null?
     else if v[0] == 'n'
@@ -211,24 +222,22 @@ ESON.Parser = Parser
 
 
 # Create and expose standard parsing function
-# Uses registered tag handlers for parsing.
-# Optionally, default tag handler can be provided
-ESON.parse = (str, default_handler) ->
+# Tries to use registered handler and use given default_strategy otherwise
+ESON.parse = (str, default_strategy) ->
   p = new Parser str
-  unless default_handler is undefined
-    p.tag_resolver = default_tag_resolver_factory(default_handler)
+  p.tag_strategy = make_standard_tag_strategy(default_strategy)
   p.parse()
 
 
 # Create and expose parsing function which ignores tags
 ESON.pure_parse = (str) ->
   p = new Parser str
-  p.tag_resolver = ignore_tag_resolver
+  p.tag_strategy = ignore_tag_strategy
   p.parse()
 
 
-# Create and expose parsing function which creates Tag structures
+# Create and expose parsing function parses tags to ESON.Tag object
 ESON.struct_parse = (str) ->
   p = new Parser str
-  p.tag_resolver = composite_tag_resolver
+  p.tag_strategy = struct_tag_strategy
   p.parse()
