@@ -26,8 +26,12 @@ objs.all = do ->
   result.push ()->{name: "number", val: 42}
   result.push ()->{name: "string", val: 'I hate using \\ to write \"'}
 
-  result.push ()->{name: "undefList", val: [1, null, undefined, 4]}
-  result.push ()->{name: "undefObject", val: {n:null, u:undefined, t:true}}
+  result.push ()->
+    name: "undefined",
+    val: [
+      [1, null, undefined, true, (()->), {toESON: ()->undefined}]
+      {n:null, u:undefined, t:true, f:(()->), g:{toESON: ()->undefined}}
+    ]
 
   for i in [0..16] by 2
     do ->

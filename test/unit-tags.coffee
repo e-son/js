@@ -105,6 +105,14 @@ describe 'stringify', ()->
     s = ESON.stringify [{x:(new ESON.Tag 'deep', 13)}]
     assert.deepEqual (tokens s), (tokens '[{"x":#deep 13}]')
 
+  it 'should stringify tagged undefined', ()->
+    s = ESON.stringify (new ESON.Tag 'lonely', undefined)
+    assert.deepEqual (tokens s), ['#lonely','null']
+
+  it 'should stringify tagged function', ()->
+    s = ESON.stringify (new ESON.Tag 'lonely', ()->)
+    assert.deepEqual (tokens s), ['#lonely','null']
+
 
 
 
