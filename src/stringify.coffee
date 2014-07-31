@@ -70,7 +70,7 @@ _stringify = (value, prefix)->
           unless _stringify v, prefix
             # This happens only if toESON / toJSON returns unserializable.
             # Supposing this won't happen, handling is not effective.
-            prefix.pop()
+            prefix.pop() if comma
             prefix.pop()
             prefix.pop()
           else
