@@ -59,7 +59,7 @@ _stringify = (value, prefix)->
     else
       prefix.push '{'   # Open object
       comma = false   # There's no comma before first element
-      for k,v of value
+      for own k,v of value
         # To effectively avoid unserializable values,
         # here is some repetitive code which inspects them
         if (typeof v is "object")

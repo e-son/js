@@ -33,6 +33,13 @@ objs.all = do ->
       {n:null, u:undefined, t:true, f:(()->), g:{toESON: ()->undefined}}
     ]
 
+  result.push ()->
+    name: "prototyped",
+    val:
+      x: 1
+      y: 2
+      __proto__: {y:3, z:4}
+
   for i in [0..16] by 2
     do ->
       size = i
