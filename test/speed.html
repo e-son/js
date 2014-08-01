@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ESON speed test</title>
+    <style>
+        td {
+            border: 1px solid black;
+            padding: 3px 10px;
+            margin: 0px
+        }
+        #mocha table {
+            font-size: 15px;
+        }
+
+    </style>
+    <link rel="stylesheet" href="helper-browser/mocha.css" />
+</head>
+<body>
+
+    <div id="mocha">
+        <p><a href="index.html">Correct test</a></p>
+
+        <p><table id='output'>
+        </table></p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src='../build/eson.js'></script>
+    <script src='./helper-JSONs.js'></script>
+    <script src='./helper-speedtest.js'></script>
+    <script>
+        $.get("sample.json", undefined, function (data) {
+            testIt({"name": "sample.json", "data": data});
+        }, 'text');
+    </script>
+</body>
+</html>

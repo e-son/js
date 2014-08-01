@@ -1,0 +1,10 @@
+# Buildable
+build
+src/*.js
+src/*.map
+test/*.js
+test/*.map
+
+# Editor files
+.idea
+**~
