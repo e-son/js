@@ -65,7 +65,9 @@ asyncTest = (objs)->
   checker.testP(ESON.parse)
   setTimeout (()-> asyncTest objs.slice 1), 0
 
-testIt = ()->
-  asyncTest(JSON_TEST_OBJECTS.all)
+testIt = (sample)->
+  objs = JSON_TEST_OBJECTS.all;
+  objs.push(() -> sample);
+  asyncTest(objs);
 
 window.testIt = testIt unless typeof window is "undefined"
